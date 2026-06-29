@@ -6,6 +6,7 @@ import {
 import {
   Home as HomeIcon, FileQuestion, Video, BookOpen, TrendingUp, GraduationCap, LogOut,
   LogIn, UserPlus, Upload, Trash2, FileText, ChevronRight, Plus, X, Play, Target, Flame, Shield,
+  NotebookPen, CheckCircle2, Circle,
 } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 
@@ -45,12 +46,12 @@ button{font-family:inherit;}
 .mm-msg.err{ background:rgba(255,122,122,.12); border:1px solid rgba(255,122,122,.3); color:#FFB4B4; }
 .mm-msg.ok{ background:rgba(45,212,191,.12); border:1px solid rgba(45,212,191,.3); color:#9FF0E5; }
 .mm-nav{ position:fixed; z-index:40; left:0; right:0; bottom:0; display:flex; justify-content:space-around; align-items:center;
-  background:rgba(8,17,28,.82); backdrop-filter:blur(18px); border-top:1px solid var(--line); padding:8px 6px calc(10px + env(safe-area-inset-bottom)); }
+  background:rgba(8,17,28,.82); backdrop-filter:blur(18px); border-top:1px solid var(--line); padding:8px 4px calc(10px + env(safe-area-inset-bottom)); }
 .mm-navbtn{ background:none;border:none;cursor:pointer; color:var(--muted-dim); display:flex;flex-direction:column;align-items:center;gap:3px;
-  font-size:10.5px;font-weight:600;letter-spacing:.02em; padding:6px 10px;border-radius:12px; transition:color .18s; }
+  font-size:10px;font-weight:600;letter-spacing:.01em; padding:6px 7px;border-radius:12px; transition:color .18s; }
 .mm-navbtn.on{ color:var(--gold); }
 .mm-navbtn.on .mm-navicon{ background:linear-gradient(180deg,rgba(242,181,68,.22),rgba(242,181,68,.06)); box-shadow:0 0 0 1px rgba(242,181,68,.35) inset; }
-.mm-navicon{ width:42px;height:30px;border-radius:11px;display:flex;align-items:center;justify-content:center; transition:.18s; }
+.mm-navicon{ width:40px;height:30px;border-radius:11px;display:flex;align-items:center;justify-content:center; transition:.18s; }
 .mm-brand{ display:none; }
 .mm-main{ flex:1; padding:0 18px calc(96px + env(safe-area-inset-bottom)); max-width:760px; margin:0 auto; width:100%; }
 .mm-topbar{ display:flex; align-items:center; justify-content:space-between; padding:20px 2px 14px; position:sticky; top:0; z-index:20; background:linear-gradient(180deg, var(--bg) 60%, transparent); }
@@ -140,6 +141,34 @@ button{font-family:inherit;}
 .mm-tooltip .tt-n{ font-family:var(--font-num); font-weight:700; color:var(--gold-soft); }
 .mm-note-banner{ font-size:11px; color:var(--muted-dim); text-align:center; padding:14px 8px 4px; line-height:1.5; }
 .mm-note-banner b{ color:var(--muted); }
+.mm-erritem{ padding:14px; border-radius:16px; background:var(--surface); border:1px solid var(--line); display:flex; flex-direction:column; gap:9px; transition:opacity .15s; }
+.mm-erritem.done{ opacity:.55; }
+.mm-erritem .econtent{ font-size:14px; line-height:1.5; }
+.mm-erritem .econtent.done{ text-decoration:line-through; color:var(--muted); }
+.mm-erritem .ecorr{ font-size:12.5px; color:var(--muted); background:var(--ink); border:1px solid var(--line); border-radius:10px; padding:9px 11px; line-height:1.5; }
+.mm-erritem .ecorr b{ color:var(--gold-soft); font-weight:600; }
+.mm-erritem .efoot{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.mm-erritem .efoot .right{ display:flex; align-items:center; gap:10px; }
+.mm-erritem .edate{ font-size:11px; color:var(--muted-dim); }
+.mm-masterbtn{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; background:none; border:none; cursor:pointer; color:var(--muted-dim); padding:0; }
+.mm-masterbtn.on{ color:var(--teal); }
+.mm-prog{ font-size:11.5px; color:var(--muted-dim); margin:2px 2px 12px; }
+.mm-prog b{ color:var(--teal); font-family:var(--font-num); }
+textarea.mm-input{ resize:vertical; min-height:74px; line-height:1.5; }
+.mm-subjavg{ display:flex; flex-direction:column; gap:8px; }
+.mm-savg{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:12px 14px; }
+.mm-savg .top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:9px; }
+.mm-savg .nm{ font-size:13px; font-weight:600; min-width:0; }
+.mm-savg .nm small{ color:var(--muted-dim); font-weight:500; font-size:11px; }
+.mm-savg .av{ font-family:var(--font-num); font-size:15px; font-weight:700; flex:none; }
+.mm-savg .av small{ color:var(--muted-dim); font-weight:500; font-size:11px; }
+.mm-savg .bar{ height:7px; border-radius:999px; background:rgba(255,255,255,.07); overflow:hidden; }
+.mm-savg .bar span{ display:block; height:100%; border-radius:999px; }
+.mm-genavg{ display:flex; align-items:center; justify-content:space-between; padding:15px 17px; border-radius:16px; margin-top:12px;
+  background:linear-gradient(160deg, rgba(45,212,191,.13), rgba(242,181,68,.09)); border:1px solid var(--line-strong); }
+.mm-genavg .l{ font-family:var(--font-display); font-size:14.5px; font-weight:700; }
+.mm-genavg .v{ font-family:var(--font-num); font-size:25px; font-weight:700; color:var(--gold-soft); }
+.mm-genavg .v small{ font-size:12px; color:var(--muted-dim); font-weight:500; }
 @media(min-width:860px){
   .mm-nav{ flex-direction:column; justify-content:flex-start; top:0; right:auto; bottom:0; width:228px; border-top:none; border-right:1px solid var(--line); padding:24px 16px; gap:6px; align-items:stretch; }
   .mm-brand{ display:flex; align-items:center; gap:11px; padding:4px 8px 22px; }
@@ -491,6 +520,14 @@ function Notes() {
   useEffect(() => { load(); }, []);
   const sorted = useMemo(() => [...grades].sort((a, b) => (a.date + a.id).localeCompare(b.date + b.id)), [grades]);
   const average = useMemo(() => { if (!grades.length) return NaN; return grades.reduce((a, g) => a + Number(g.note), 0) / grades.length; }, [grades]);
+  const bySubject = useMemo(() => {
+    const map = {};
+    for (const g of grades) { (map[g.subject] = map[g.subject] || []).push(Number(g.note)); }
+    return Object.entries(map)
+      .map(([subject, notes]) => ({ subject, avg: notes.reduce((a, b) => a + b, 0) / notes.length, count: notes.length }))
+      .sort((a, b) => a.avg - b.avg);
+  }, [grades]);
+  const colorFor = (v) => (v >= target ? "var(--teal)" : v >= 10 ? "var(--gold)" : "var(--coral)");
   const chartData = useMemo(() => {
     let sum = 0;
     return sorted.map((g, i) => { sum += Number(g.note); return { i, label: frDate(g.date), note: Number(g.note), moyenne: +(sum / (i + 1)).toFixed(2), subject: g.subject }; });
@@ -526,6 +563,25 @@ function Notes() {
             </ResponsiveContainer>
           )}
       </div>
+
+      {grades.length > 0 && (
+        <>
+          <div className="mm-sec-head"><h2 style={{ fontSize: 16 }}>Moyennes par matière</h2><span className="sub">de la plus fragile à la plus solide</span></div>
+          <div className="mm-subjavg">
+            {bySubject.map((rsub) => (
+              <div className="mm-savg" key={rsub.subject}>
+                <div className="top">
+                  <div className="nm">{rsub.subject} <small>· {rsub.count} note{rsub.count > 1 ? "s" : ""}</small></div>
+                  <div className="av" style={{ color: colorFor(rsub.avg) }}>{fmt(rsub.avg)}<small> /20</small></div>
+                </div>
+                <div className="bar"><span style={{ width: `${Math.min(100, (rsub.avg / 20) * 100)}%`, background: colorFor(rsub.avg) }} /></div>
+              </div>
+            ))}
+          </div>
+          <div className="mm-genavg"><span className="l">Moyenne générale</span><span className="v">{fmt(average)}<small> /20</small></span></div>
+        </>
+      )}
+
       <div className="mm-ring-card" style={{ marginTop: 0 }}>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".12em", color: "var(--muted-dim)", fontWeight: 600 }}>Ton objectif de moyenne</div>
@@ -568,21 +624,119 @@ function Notes() {
   );
 }
 
+function Errors() {
+  const { user } = useAuth();
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [semester, setSemester] = useState(1);
+  const [active, setActive] = useState(SUBJECTS_BY_SEMESTER[1][0]);
+  const [content, setContent] = useState("");
+  const [correction, setCorrection] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  async function load() {
+    setLoading(true);
+    const { data } = await supabase.from("errors").select("*").order("created_at", { ascending: false });
+    setItems(data || []); setLoading(false);
+  }
+  useEffect(() => { load(); }, []);
+  function switchSemester(s) { setSemester(s); setActive(SUBJECTS_BY_SEMESTER[s][0]); setShowForm(false); }
+  const subjects = useMemo(() => {
+    const known = SUBJECTS_BY_SEMESTER[semester];
+    const extras = Array.from(new Set(items.map((i) => i.subject))).filter((s) => !DEFAULT_SUBJECTS.includes(s));
+    return [...known, ...extras];
+  }, [items, semester]);
+  const list = items.filter((i) => i.subject === active);
+  const countFor = (s) => items.filter((i) => i.subject === s).length;
+  const mastered = list.filter((i) => i.mastered).length;
+  async function add(e) {
+    e.preventDefault();
+    if (!content.trim()) return;
+    const { error } = await supabase.from("errors").insert({ user_id: user.id, subject: active, content: content.trim(), correction: correction.trim() || null });
+    if (error) { alert("Échec : " + error.message); return; }
+    setContent(""); setCorrection(""); setShowForm(false); load();
+  }
+  async function toggleMaster(it) { await supabase.from("errors").update({ mastered: !it.mastered }).eq("id", it.id); load(); }
+  async function remove(id) { if (!confirm("Supprimer cette erreur ?")) return; await supabase.from("errors").delete().eq("id", id); load(); }
+  return (
+    <>
+      <div className="mm-sec-head"><h2>Carnet d'erreurs</h2></div>
+      <p style={{ color: "var(--muted)", fontSize: 13, margin: "-6px 2px 16px" }}>Note tes erreurs par matière pour ne plus jamais les refaire. Privé : toi seul les vois.</p>
+      <div className="mm-seg">
+        <button className={semester === 1 ? "on" : ""} onClick={() => switchSemester(1)}>Semestre 1</button>
+        <button className={semester === 2 ? "on" : ""} onClick={() => switchSemester(2)}>Semestre 2</button>
+      </div>
+      <div className="mm-subjects">
+        {subjects.map((s) => (
+          <button key={s} className={`mm-subj ${active === s ? "on" : ""}`} onClick={() => { setActive(s); setShowForm(false); }}>
+            {s}{countFor(s) ? <span className="cnt">{countFor(s)}</span> : null}
+          </button>
+        ))}
+      </div>
+      {showForm ? (
+        <form className="mm-form" onSubmit={add} style={{ marginBottom: 16 }}>
+          <div className="mm-field"><label>Ton erreur · {active}</label>
+            <textarea className="mm-input" value={content} onChange={(e) => setContent(e.target.value)} placeholder="Ex. J'ai confondu liaison peptidique et liaison ester…" required /></div>
+          <div className="mm-field"><label>À retenir / correction (optionnel)</label>
+            <textarea className="mm-input" value={correction} onChange={(e) => setCorrection(e.target.value)} placeholder="La bonne réponse + comment ne plus se tromper" /></div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button className="mm-btn mm-btn-gold" type="submit" style={{ flex: 1 }}><Plus size={16} />Enregistrer</button>
+            <button className="mm-btn mm-btn-ghost" type="button" onClick={() => setShowForm(false)}>Annuler</button>
+          </div>
+        </form>
+      ) : (
+        <button className="mm-btn mm-btn-gold mm-btn-block" style={{ margin: "6px 0 16px" }} onClick={() => setShowForm(true)}>
+          <Plus size={16} />Ajouter une erreur · {active}
+        </button>
+      )}
+      {loading ? (<div className="mm-empty"><div className="mm-spin" /></div>)
+        : list.length === 0 ? (
+          <div className="mm-empty"><div className="eic"><NotebookPen size={24} /></div>
+            <h4>Aucune erreur notée en {active}</h4>
+            <p>Chaque erreur notée est une erreur que tu ne referas plus le jour J.</p></div>
+        ) : (
+          <>
+            <div className="mm-prog">{mastered > 0 ? <><b>{mastered}/{list.length}</b> maîtrisée{mastered > 1 ? "s" : ""} en {active}</> : <>{list.length} erreur{list.length > 1 ? "s" : ""} à revoir</>}</div>
+            <div className="mm-filelist">
+              {list.map((it) => (
+                <div className={`mm-erritem ${it.mastered ? "done" : ""}`} key={it.id}>
+                  <div className={`econtent ${it.mastered ? "done" : ""}`}>{it.content}</div>
+                  {it.correction && <div className="ecorr"><b>À retenir : </b>{it.correction}</div>}
+                  <div className="efoot">
+                    <button className={`mm-masterbtn ${it.mastered ? "on" : ""}`} onClick={() => toggleMaster(it)}>
+                      {it.mastered ? <CheckCircle2 size={15} /> : <Circle size={15} />}
+                      {it.mastered ? "Maîtrisée" : "Marquer maîtrisée"}
+                    </button>
+                    <div className="right">
+                      <span className="edate">{frDate(it.created_at)}</span>
+                      <button className="mm-iconbtn danger" onClick={() => remove(it.id)}><Trash2 size={15} /></button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      <p className="mm-note-banner"><b>Astuce :</b> relis ton carnet la veille des partiels. Coche « maîtrisée » au fur et à mesure.</p>
+    </>
+  );
+}
+
 function Home({ setTab }) {
   const { profile, isAdmin } = useAuth();
-  const [counts, setCounts] = useState({ qcm: 0, cours: 0, videos: 0, grades: 0 });
+  const [counts, setCounts] = useState({ qcm: 0, cours: 0, videos: 0, grades: 0, erreurs: 0 });
   const [average, setAverage] = useState(NaN);
   const motivation = useMemo(() => MOTIVATION[Math.floor(Math.random() * MOTIVATION.length)], []);
   const target = (() => { const v = window.localStorage.getItem("mm_target"); return v ? parseFloat(v) : 16; })();
   useEffect(() => {
     (async () => {
-      const [docs, vids, grades] = await Promise.all([
+      const [docs, vids, grades, errs] = await Promise.all([
         supabase.from("documents").select("kind"),
         supabase.from("videos").select("id"),
         supabase.from("grades").select("note"),
+        supabase.from("errors").select("id"),
       ]);
       const d = docs.data || [];
-      setCounts({ qcm: d.filter((x) => x.kind === "qcm").length, cours: d.filter((x) => x.kind === "cours").length, videos: (vids.data || []).length, grades: (grades.data || []).length });
+      setCounts({ qcm: d.filter((x) => x.kind === "qcm").length, cours: d.filter((x) => x.kind === "cours").length, videos: (vids.data || []).length, grades: (grades.data || []).length, erreurs: (errs.data || []).length });
       const g = grades.data || [];
       if (g.length) setAverage(g.reduce((a, x) => a + Number(x.note), 0) / g.length);
     })();
@@ -595,6 +749,7 @@ function Home({ setTab }) {
     { id: "cours", t: "Cours", d: `${counts.cours} fichier${counts.cours > 1 ? "s" : ""}`, ic: BookOpen, c: "var(--gold)", bg: "rgba(242,181,68,.14)" },
     { id: "videos", t: "Vidéos", d: `${counts.videos} vidéo${counts.videos > 1 ? "s" : ""}`, ic: Video, c: "#7DD3FC", bg: "rgba(125,211,252,.14)" },
     { id: "notes", t: "Mes notes", d: `${counts.grades} note${counts.grades > 1 ? "s" : ""}`, ic: TrendingUp, c: "#C4B5FD", bg: "rgba(196,181,253,.14)" },
+    { id: "erreurs", t: "Carnet d'erreurs", d: `${counts.erreurs} erreur${counts.erreurs > 1 ? "s" : ""}`, ic: NotebookPen, c: "#FCA5A5", bg: "rgba(252,165,165,.14)" },
   ];
   return (
     <>
@@ -638,6 +793,7 @@ const NAV = [
   { id: "videos", label: "Vidéos", icon: Video },
   { id: "cours", label: "Cours", icon: BookOpen },
   { id: "notes", label: "Notes", icon: TrendingUp },
+  { id: "erreurs", label: "Erreurs", icon: NotebookPen },
 ];
 
 function App() {
@@ -665,6 +821,7 @@ function App() {
         {tab === "cours" && <Library kind="cours" />}
         {tab === "videos" && <Videos />}
         {tab === "notes" && <Notes />}
+        {tab === "erreurs" && <Errors />}
       </main>
     </div>
   );
