@@ -318,7 +318,7 @@ function Library({ kind }) {
     try {
       for (const f of files) {
         const safe = f.name.replace(/[^\w.\-]+/g, "_");
-        const path = `${kind}/${active}/${Date.now()}-${safe}`;
+        const path = `${kind}/${active.replace(/[^A-Za-z0-9]+/g, "_")}/${Date.now()}-${safe}`;
         const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, f, { contentType: "application/pdf" });
         if (upErr) throw upErr;
         const { data: u } = await supabase.auth.getUser();
