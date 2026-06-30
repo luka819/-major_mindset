@@ -6,7 +6,7 @@ import {
 import {
   Home as HomeIcon, FileQuestion, Video, BookOpen, TrendingUp, GraduationCap, LogOut,
   LogIn, UserPlus, Upload, Trash2, FileText, ChevronRight, Plus, X, Play, Target, Flame, Shield,
-  NotebookPen, CheckCircle2, Circle,
+  NotebookPen, CheckCircle2, Circle, Minus, Repeat,
 } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 
@@ -46,12 +46,12 @@ button{font-family:inherit;}
 .mm-msg.err{ background:rgba(255,122,122,.12); border:1px solid rgba(255,122,122,.3); color:#FFB4B4; }
 .mm-msg.ok{ background:rgba(45,212,191,.12); border:1px solid rgba(45,212,191,.3); color:#9FF0E5; }
 .mm-nav{ position:fixed; z-index:40; left:0; right:0; bottom:0; display:flex; justify-content:space-around; align-items:center;
-  background:rgba(8,17,28,.82); backdrop-filter:blur(18px); border-top:1px solid var(--line); padding:8px 4px calc(10px + env(safe-area-inset-bottom)); }
-.mm-navbtn{ background:none;border:none;cursor:pointer; color:var(--muted-dim); display:flex;flex-direction:column;align-items:center;gap:3px;
-  font-size:10px;font-weight:600;letter-spacing:.01em; padding:6px 7px;border-radius:12px; transition:color .18s; }
+  background:rgba(8,17,28,.82); backdrop-filter:blur(18px); border-top:1px solid var(--line); padding:8px 2px calc(10px + env(safe-area-inset-bottom)); }
+.mm-navbtn{ background:none;border:none;cursor:pointer; color:var(--muted-dim); display:flex;flex-direction:column;align-items:center;gap:2px;
+  font-size:9.5px;font-weight:600;letter-spacing:.01em; padding:6px 5px;border-radius:12px; transition:color .18s; }
 .mm-navbtn.on{ color:var(--gold); }
 .mm-navbtn.on .mm-navicon{ background:linear-gradient(180deg,rgba(242,181,68,.22),rgba(242,181,68,.06)); box-shadow:0 0 0 1px rgba(242,181,68,.35) inset; }
-.mm-navicon{ width:40px;height:30px;border-radius:11px;display:flex;align-items:center;justify-content:center; transition:.18s; }
+.mm-navicon{ width:38px;height:28px;border-radius:10px;display:flex;align-items:center;justify-content:center; transition:.18s; }
 .mm-brand{ display:none; }
 .mm-main{ flex:1; padding:0 18px calc(96px + env(safe-area-inset-bottom)); max-width:760px; margin:0 auto; width:100%; }
 .mm-topbar{ display:flex; align-items:center; justify-content:space-between; padding:20px 2px 14px; position:sticky; top:0; z-index:20; background:linear-gradient(180deg, var(--bg) 60%, transparent); }
@@ -169,6 +169,19 @@ textarea.mm-input{ resize:vertical; min-height:74px; line-height:1.5; }
 .mm-genavg .l{ font-family:var(--font-display); font-size:14.5px; font-weight:700; }
 .mm-genavg .v{ font-family:var(--font-num); font-size:25px; font-weight:700; color:var(--gold-soft); }
 .mm-genavg .v small{ font-size:12px; color:var(--muted-dim); font-weight:500; }
+.mm-course{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:13px 14px; display:flex; flex-direction:column; gap:11px; }
+.mm-course .ctop{ display:flex; align-items:center; gap:10px; }
+.mm-course .cdot{ width:13px; height:13px; border-radius:50%; flex:none; }
+.mm-course .cname{ flex:1; font-size:14px; font-weight:600; min-width:0; word-break:break-word; }
+.mm-course .crow{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.mm-step{ display:flex; align-items:center; gap:8px; background:var(--ink); border:1px solid var(--line); border-radius:11px; padding:4px; }
+.mm-step button{ width:30px; height:30px; border-radius:8px; border:none; background:var(--surface-2); color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.mm-step button:active{ background:var(--surface); }
+.mm-step .cnt2{ font-family:var(--font-num); font-weight:700; font-size:15px; min-width:54px; text-align:center; }
+.mm-step .cnt2 small{ font-size:10px; color:var(--muted-dim); font-weight:500; }
+.mm-swatches{ display:flex; gap:7px; }
+.mm-sw{ width:26px; height:26px; border-radius:50%; cursor:pointer; border:2px solid transparent; padding:0; }
+.mm-sw.on{ border-color:var(--text); }
 @media(min-width:860px){
   .mm-nav{ flex-direction:column; justify-content:flex-start; top:0; right:auto; bottom:0; width:228px; border-top:none; border-right:1px solid var(--line); padding:24px 16px; gap:6px; align-items:stretch; }
   .mm-brand{ display:flex; align-items:center; gap:11px; padding:4px 8px 22px; }
@@ -184,6 +197,7 @@ const SUBJECTS_BY_SEMESTER = {
 };
 const DEFAULT_SUBJECTS = [...SUBJECTS_BY_SEMESTER[1], ...SUBJECTS_BY_SEMESTER[2]];
 const SUBJECT_COLORS = ["#2DD4BF","#F2B544","#7DD3FC","#FCA5A5","#C4B5FD","#86EFAC","#FDBA74","#F9A8D4","#5EEAD4","#FCD34D","#93C5FD","#D8B4FE","#6EE7B7","#FDA4AF"];
+const COURSE_COLORS = { yellow: "#FACC15", red: "#F87171", blue: "#60A5FA" };
 const MOTIVATION = [
   "La régularité bat le talent quand le talent reste assis.",
   "Un QCM par jour, c'est un rang gagné chaque semaine.",
@@ -721,22 +735,134 @@ function Errors() {
   );
 }
 
+function Tracker() {
+  const { user } = useAuth();
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [semester, setSemester] = useState(1);
+  const [active, setActive] = useState(SUBJECTS_BY_SEMESTER[1][0]);
+  const [name, setName] = useState("");
+  const [color, setColor] = useState("blue");
+  const [showForm, setShowForm] = useState(false);
+  async function load() {
+    setLoading(true);
+    const { data } = await supabase.from("courses").select("*").order("created_at", { ascending: true });
+    setItems(data || []); setLoading(false);
+  }
+  useEffect(() => { load(); }, []);
+  function switchSemester(s) { setSemester(s); setActive(SUBJECTS_BY_SEMESTER[s][0]); setShowForm(false); }
+  const subjects = useMemo(() => {
+    const known = SUBJECTS_BY_SEMESTER[semester];
+    const extras = Array.from(new Set(items.map((i) => i.subject))).filter((s) => !DEFAULT_SUBJECTS.includes(s));
+    return [...known, ...extras];
+  }, [items, semester]);
+  const list = items.filter((i) => i.subject === active);
+  const countFor = (s) => items.filter((i) => i.subject === s).length;
+  async function add(e) {
+    e.preventDefault();
+    if (!name.trim()) return;
+    const { error } = await supabase.from("courses").insert({ user_id: user.id, subject: active, name: name.trim(), color, reviews: 0 });
+    if (error) { alert("Échec : " + error.message); return; }
+    setName(""); setColor("blue"); setShowForm(false); load();
+  }
+  async function setReviews(it, val) {
+    const v = Math.max(0, val);
+    setItems((prev) => prev.map((x) => (x.id === it.id ? { ...x, reviews: v } : x)));
+    await supabase.from("courses").update({ reviews: v }).eq("id", it.id);
+  }
+  async function setColorFor(it, col) {
+    setItems((prev) => prev.map((x) => (x.id === it.id ? { ...x, color: col } : x)));
+    await supabase.from("courses").update({ color: col }).eq("id", it.id);
+  }
+  async function remove(id) { if (!confirm("Supprimer ce cours ?")) return; await supabase.from("courses").delete().eq("id", id); load(); }
+  return (
+    <>
+      <div className="mm-sec-head"><h2>Suivi des cours</h2></div>
+      <p style={{ color: "var(--muted)", fontSize: 13, margin: "-6px 2px 16px" }}>Liste tes cours par matière, compte tes révisions et code-les par couleur. Privé : toi seul les vois.</p>
+      <div className="mm-seg">
+        <button className={semester === 1 ? "on" : ""} onClick={() => switchSemester(1)}>Semestre 1</button>
+        <button className={semester === 2 ? "on" : ""} onClick={() => switchSemester(2)}>Semestre 2</button>
+      </div>
+      <div className="mm-subjects">
+        {subjects.map((s) => (
+          <button key={s} className={`mm-subj ${active === s ? "on" : ""}`} onClick={() => { setActive(s); setShowForm(false); }}>
+            {s}{countFor(s) ? <span className="cnt">{countFor(s)}</span> : null}
+          </button>
+        ))}
+      </div>
+      {showForm ? (
+        <form className="mm-form" onSubmit={add} style={{ marginBottom: 16 }}>
+          <div className="mm-field"><label>Nom du cours · {active}</label>
+            <input className="mm-input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex. Les acides aminés" required /></div>
+          <div className="mm-field"><label>Couleur</label>
+            <div className="mm-swatches">
+              {Object.entries(COURSE_COLORS).map(([k, hex]) => (
+                <button type="button" key={k} className={`mm-sw ${color === k ? "on" : ""}`} style={{ background: hex }} onClick={() => setColor(k)} aria-label={k} />
+              ))}
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button className="mm-btn mm-btn-gold" type="submit" style={{ flex: 1 }}><Plus size={16} />Ajouter</button>
+            <button className="mm-btn mm-btn-ghost" type="button" onClick={() => setShowForm(false)}>Annuler</button>
+          </div>
+        </form>
+      ) : (
+        <button className="mm-btn mm-btn-gold mm-btn-block" style={{ margin: "6px 0 16px" }} onClick={() => setShowForm(true)}>
+          <Plus size={16} />Ajouter un cours · {active}
+        </button>
+      )}
+      {loading ? (<div className="mm-empty"><div className="mm-spin" /></div>)
+        : list.length === 0 ? (
+          <div className="mm-empty"><div className="eic"><Repeat size={24} /></div>
+            <h4>Aucun cours suivi en {active}</h4>
+            <p>Ajoute tes cours pour compter combien de fois tu les as revus.</p></div>
+        ) : (
+          <div className="mm-filelist">
+            {list.map((it) => (
+              <div className="mm-course" key={it.id}>
+                <div className="ctop">
+                  <span className="cdot" style={{ background: COURSE_COLORS[it.color] || COURSE_COLORS.blue }} />
+                  <div className="cname">{it.name}</div>
+                  <button className="mm-iconbtn danger" onClick={() => remove(it.id)}><Trash2 size={15} /></button>
+                </div>
+                <div className="crow">
+                  <div className="mm-step">
+                    <button onClick={() => setReviews(it, it.reviews - 1)} aria-label="moins"><Minus size={16} /></button>
+                    <span className="cnt2">{it.reviews}<small>× vu</small></span>
+                    <button onClick={() => setReviews(it, it.reviews + 1)} aria-label="plus"><Plus size={16} /></button>
+                  </div>
+                  <div className="mm-swatches">
+                    {Object.entries(COURSE_COLORS).map(([k, hex]) => (
+                      <button type="button" key={k} className={`mm-sw ${it.color === k ? "on" : ""}`} style={{ background: hex }} onClick={() => setColorFor(it, k)} aria-label={k} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      <p className="mm-note-banner"><b>Astuce :</b> mets en rouge ce qui n'est pas acquis, en jaune ce qui est en cours, en bleu ce qui est maîtrisé — à toi de choisir ton code.</p>
+    </>
+  );
+}
+
 function Home({ setTab }) {
   const { profile, isAdmin } = useAuth();
-  const [counts, setCounts] = useState({ qcm: 0, cours: 0, videos: 0, grades: 0, erreurs: 0 });
+  const [counts, setCounts] = useState({ qcm: 0, cours: 0, videos: 0, grades: 0, erreurs: 0, suivi: 0 });
   const [average, setAverage] = useState(NaN);
   const motivation = useMemo(() => MOTIVATION[Math.floor(Math.random() * MOTIVATION.length)], []);
   const target = (() => { const v = window.localStorage.getItem("mm_target"); return v ? parseFloat(v) : 16; })();
   useEffect(() => {
     (async () => {
-      const [docs, vids, grades, errs] = await Promise.all([
+      const [docs, vids, grades, errs, crs] = await Promise.all([
         supabase.from("documents").select("kind"),
         supabase.from("videos").select("id"),
         supabase.from("grades").select("note"),
         supabase.from("errors").select("id"),
+        supabase.from("courses").select("id"),
       ]);
       const d = docs.data || [];
-      setCounts({ qcm: d.filter((x) => x.kind === "qcm").length, cours: d.filter((x) => x.kind === "cours").length, videos: (vids.data || []).length, grades: (grades.data || []).length, erreurs: (errs.data || []).length });
+      setCounts({ qcm: d.filter((x) => x.kind === "qcm").length, cours: d.filter((x) => x.kind === "cours").length, videos: (vids.data || []).length, grades: (grades.data || []).length, erreurs: (errs.data || []).length, suivi: (crs.data || []).length });
       const g = grades.data || [];
       if (g.length) setAverage(g.reduce((a, x) => a + Number(x.note), 0) / g.length);
     })();
@@ -750,6 +876,7 @@ function Home({ setTab }) {
     { id: "videos", t: "Vidéos", d: `${counts.videos} vidéo${counts.videos > 1 ? "s" : ""}`, ic: Video, c: "#7DD3FC", bg: "rgba(125,211,252,.14)" },
     { id: "notes", t: "Mes notes", d: `${counts.grades} note${counts.grades > 1 ? "s" : ""}`, ic: TrendingUp, c: "#C4B5FD", bg: "rgba(196,181,253,.14)" },
     { id: "erreurs", t: "Carnet d'erreurs", d: `${counts.erreurs} erreur${counts.erreurs > 1 ? "s" : ""}`, ic: NotebookPen, c: "#FCA5A5", bg: "rgba(252,165,165,.14)" },
+    { id: "suivi", t: "Suivi des cours", d: `${counts.suivi} cours suivi${counts.suivi > 1 ? "s" : ""}`, ic: Repeat, c: "#60A5FA", bg: "rgba(96,165,250,.14)" },
   ];
   return (
     <>
@@ -794,6 +921,7 @@ const NAV = [
   { id: "cours", label: "Cours", icon: BookOpen },
   { id: "notes", label: "Notes", icon: TrendingUp },
   { id: "erreurs", label: "Erreurs", icon: NotebookPen },
+  { id: "suivi", label: "Suivi", icon: Repeat },
 ];
 
 function App() {
@@ -822,6 +950,7 @@ function App() {
         {tab === "videos" && <Videos />}
         {tab === "notes" && <Notes />}
         {tab === "erreurs" && <Errors />}
+        {tab === "suivi" && <Tracker />}
       </main>
     </div>
   );
